@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+      <groupId>org.apache.stanbol</groupId>
+      <artifactId>stanbol-ext-parent</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <relativePath>..</relativePath>
+    </parent>
+    
+    <groupId>org.apache.stanbol</groupId>
+    <artifactId>xuggle-xuggler-bundle</artifactId>
+    <!-- use the version of the wrapped xuggle libs -->
+    <version>5.4.0-SNAPSHOT</version>
+    <packaging>bundle</packaging>
+
+    <name>OSGI Bundle for xuggle-xuggler</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <xuggle-version>5.4</xuggle-version>
+    </properties>
+
+    <developers>
+        <developer>
+            <id>rwesten</id>
+            <name>Rupert Westenthaler</name>
+            <email>rupert.westenthaler@gmail.com</email>
+            <organization>Salzburg Research Forschungsges.m.b.H</organization>
+            <organizationUrl>http://www.salzburgresearch.at/en/bereiche/kmt_en/</organizationUrl>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>xuggle</groupId>
+            <artifactId>xuggle-xuggler</artifactId>
+            <version>${xuggle-version}</version>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <!-- http://maven.apache.org/plugins/maven-compiler-plugin/ -->
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.3.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                  <instructions>
+                    <Export-Package>
+                    </Export-Package>
+                    <!-- used instead of Export-Package to preserve the jars -->
+                    <_exportcontents>
+                      com.xuggle.ferry;version=${xuggle-version},
+                      com.xuggle.mediatool*;version=${xuggle-version},
+                      com.xuggle.xuggler*;version=${xuggle-version}
+                    </_exportcontents>
+                    <!-- packages marked with resolution:=optional are not provided by
+                     this module. Users that need them will need to provide bundles
+                     exporting those frameworks -->
+                    <Import-Package>
+                      javax.swing;resolution:=optional,
+                      javax.swing.*;resolution:=optional,
+                      org.apache.commons.cli.*;resolution:=optional,
+                      *
+                    </Import-Package>
+                    <!-- DynamicImport-Package>*</DynamicImport-Package -->
+                    <Embed-Dependency>
+                      xuggle-xuggler
+                    </Embed-Dependency>
+                    <Private-Package>
+                      com.xuggle.ferry.*;version=${xuggle-version}
+                    </Private-Package>
+                    <Bundle-NativeCode>
+                      com/xuggle/ferry/i386-xuggle-darwin11/libxuggle.dylib; osname = macosx; processor = x86 ,
+                      com/xuggle/ferry/x86_64-xuggle-darwin11/libxuggle.dylib; osname = macosx; processor = x86_64 ,
+                      com/xuggle/ferry/i686-pc-linux-gnu/libxuggle.so; osname = linux; processor = x86 ,
+                      com/xuggle/ferry/x86_64-pc-linux-gnu/libxuggle.so; osname = linux; processor = x86_64 ,
+                      com/xuggle/ferry/i686-w64-mingw32/libxuggle-5.dll; osname= Win32; processor = x86 ,
+                      com/xuggle/ferry/x86_64-w64-mingw32/libxuggle-5.dll; osname = Win64 ; processor = x86_64
+                    </Bundle-NativeCode>
+                  </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>xuggle repo</id>
+            <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+</project>
