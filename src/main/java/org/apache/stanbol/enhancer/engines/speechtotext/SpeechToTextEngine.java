@@ -18,6 +18,10 @@ package org.apache.stanbol.enhancer.engines.speechtotext;
 */
 
 import static org.apache.stanbol.enhancer.servicesapi.helper.EnhancementEngineHelper.randomUUID;
+import static org.apache.stanbol.enhancer.servicesapi.rdf.Properties.DC_TYPE;
+import static org.apache.stanbol.enhancer.servicesapi.rdf.Properties.ENHANCER_SELECTED_TEXT;
+import static org.apache.stanbol.enhancer.servicesapi.rdf.Properties.ENHANCER_START;
+import static org.apache.stanbol.enhancer.servicesapi.rdf.Properties.ENHANCER_END;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -29,7 +33,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.clerezza.rdf.core.LiteralFactory;
+import org.apache.clerezza.rdf.core.MGraph;
 import org.apache.clerezza.rdf.core.UriRef;
+import org.apache.clerezza.rdf.core.impl.TripleImpl;
 import org.apache.commons.io.IOUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
@@ -45,7 +52,9 @@ import org.apache.stanbol.enhancer.servicesapi.EngineException;
 import org.apache.stanbol.enhancer.servicesapi.EnhancementEngine;
 import org.apache.stanbol.enhancer.servicesapi.InvalidContentException;
 import org.apache.stanbol.enhancer.servicesapi.ServiceProperties;
+import org.apache.stanbol.enhancer.servicesapi.helper.EnhancementEngineHelper;
 import org.apache.stanbol.enhancer.servicesapi.impl.AbstractEnhancementEngine;
+import org.apache.stanbol.enhancer.servicesapi.rdf.OntologicalClasses;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
@@ -113,9 +122,10 @@ implements EnhancementEngine, ServiceProperties {
     
     @Override
     protected void deactivate(ComponentContext ctx) throws RuntimeException {
-        //this.config = null;
-	super.deactivate(ctx);
-	
+    	config.deleteTemp();
+        this.config = null;
+    	super.deactivate(ctx);
+    	
     }
     
     /**
@@ -143,29 +153,39 @@ implements EnhancementEngine, ServiceProperties {
     @Override
     public void computeEnhancements(ContentItem ci) throws EngineException {
         config.initConfig(ci);
-        List<String> resultPredicted;
+        List<ArrayList<String>> resultPredicted;
+        StringBuffer recogString=new StringBuffer();
+
         final InputStream in;
         Configuration configuration = config.getConfiguration();
         try {
             in = ci.getStream();
-            System.out.print(in);
+            //System.out.print(in);
             
 
             //Extracting Text from Media File parsed
             StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(configuration);
             recognizer.startRecognition(in);
             SpeechResult result;
-            resultPredicted=new ArrayList<String>();
+            resultPredicted=new ArrayList<ArrayList<String>>();//for time-stamp mapping
             
            //Recognising the Media Data and storing each line in @resultPredicted
-            
             while ((result = recognizer.getResult()) != null)
             {
                 List<WordResult> wordlist=result.getWords();
-            	String timeStamp="["+wordlist.get(0).getTimeFrame().getStart()+ " , "
-            					+wordlist.get(wordlist.size()-2).getTimeFrame().getEnd()+"]";
-            	resultPredicted.add(timeStamp+ " "+result.getHypothesis());
-                System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+result.getHypothesis());
+                ArrayList<String>sentencePredicted=new ArrayList<String>();
+                sentencePredicted.add(String.valueOf(wordlist.get(0).getTimeFrame().getStart()));
+                sentencePredicted.add(String.valueOf(wordlist.get(wordlist.size()-2).getTimeFrame().getEnd()));
+                
+                //sentencePredicted.add(wordlist.get(0).getTimeFrame().getStart());
+            	//String timeStamp="["+wordlist.get(0).getTimeFrame().getStart()+ " , "
+            		//			+wordlist.get(wordlist.size()-2).getTimeFrame().getEnd()+"]";
+            	//resultPredicted.add(timeStamp+ " "+result.getHypothesis());
+                
+                sentencePredicted.add(result.getHypothesis());
+                resultPredicted.add(sentencePredicted);
+            	recogString.append(result.getHypothesis()+"\n");
+                //System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+result.getHypothesis());
             }
             recognizer.stopRecognition();
         } catch (IOException ex) {
@@ -186,8 +206,7 @@ implements EnhancementEngine, ServiceProperties {
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(plainTextSink.getOutputStream(), UTF8));
             try
             { // parse the writer to the framework that extracts the text 
-            	for(String str: resultPredicted)
-            	out.write(str);
+            	out.write(recogString.toString());
             } catch (IOException e) {
             	throw new EngineException("Unable to write extracted" +
                 		"plain text to Blob (blob impl: "
@@ -202,8 +221,23 @@ implements EnhancementEngine, ServiceProperties {
             
             
             plainTextSink=null;
-            
             ci.getLock().writeLock().lock();
+            try
+            {
+                MGraph metadata = ci.getMetadata();
+            	LiteralFactory lf = LiteralFactory.getInstance();
+    			UriRef timestampAnnotation = EnhancementEngineHelper.createTextEnhancement(ci, this);
+            	for (ArrayList<String> entry : resultPredicted) {
+        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_START,lf.createTypedLiteral(entry.get(0))));
+        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_END,lf.createTypedLiteral(entry.get(1))));
+        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_SELECTED_TEXT,lf.createTypedLiteral(entry.get(2))));
+        			metadata.add(new TripleImpl(timestampAnnotation, DC_TYPE,OntologicalClasses.DBPEDIA_ORGANISATION));
+            		//System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+            	}
+            }finally{
+                ci.getLock().writeLock().unlock();
+            }
+            //ci.getLock().writeLock().lock();
             /*
             try {
                 MGraph graph = ci.getMetadata();

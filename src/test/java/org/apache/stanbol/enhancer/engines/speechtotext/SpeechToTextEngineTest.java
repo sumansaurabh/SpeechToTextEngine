@@ -48,20 +48,21 @@ public class SpeechToTextEngineTest {
         if(engine == null){
             engine = new SpeechToTextEngine(ciFactory, MP);
 	    engine.activate(context);
-	}
+        }
     }
     @Test 
     public void testComputeEnhancements() throws EngineException, IOException, ParseException {
         log.info(">>> Sphinix Testing WAV  <<<");
-	ContentItem ci = createContentItem("10001-90210-01803.wav", "audio/wav");
-	assertFalse(engine.canEnhance(ci) == CANNOT_ENHANCE);
-	engine.computeEnhancements(ci);
-	Entry<UriRef,Blob> contentPart = ContentItemHelper.getBlob(ci, singleton("text/plain"));
-	String text = ContentItemHelper.getText(contentPart.getValue());
-    //System.out.println("##################################################"+text);
-	assertNotNull(contentPart);
-	Blob plainTextBlob = contentPart.getValue();
-	assertNotNull(plainTextBlob);        
+        ContentItem ci = createContentItem("10001-90210-01803.wav", "audio/wav");
+        assertFalse(engine.canEnhance(ci) == CANNOT_ENHANCE);
+        //System.out.println("##################################################"+ci.getMetadata());
+        engine.computeEnhancements(ci);
+        Entry<UriRef,Blob> contentPart = ContentItemHelper.getBlob(ci, singleton("text/plain"));
+        //	String text = ContentItemHelper.getText(contentPart.getValue());
+        //System.out.println("##################################################"+ci.getMetadata());
+        assertNotNull(contentPart);
+        Blob plainTextBlob = contentPart.getValue();
+        assertNotNull(plainTextBlob);        
     }
 	 
 
@@ -71,10 +72,13 @@ public class SpeechToTextEngineTest {
         return ciFactory.createContentItem(new StreamSource(in,contentType));
     }
     @After
-    public void unbindServices() {/*nothing to do */}
+    public void unbindServices() { 
+
+    }
     @AfterClass
     public static void shutdownServices() {
+    	log.info("\n>>Cleaning Temporary Resource<<");
         engine.deactivate(context);
-	engine = null;
+        engine = null;
     }	    
 }

@@ -21,8 +21,8 @@ public class SphinxConfig {
 	
 	
     private static final Logger log = LoggerFactory.getLogger(SpeechToTextEngine.class);
-    ModelProvider MP;
-    BaseModel lmodel, amodel, dmodel;
+    private ModelProvider MP;
+    private BaseModel lmodel, amodel, dmodel;
     
     
     
@@ -76,8 +76,8 @@ public class SphinxConfig {
 		return (DictionaryModel)dmodel;
 	}
 	public LanguageModel getLanguageModelLocation() {		
-            return (LanguageModel)lmodel;
-        }
+        return (LanguageModel)lmodel;
+    }
 	
 	 /**
      * Extracts the language of the parsed ContentItem by using
@@ -101,10 +101,16 @@ public class SphinxConfig {
     public Configuration getConfiguration()
     {
     	Configuration configuration = new Configuration();
+        //System.out.println("$$$$$$$$$"+getAcousticModelLocation().toString());
     	configuration.setAcousticModelPath(getAcousticModelLocation().toString());
         configuration.setDictionaryPath(getDictionaryModelLocation().toString());
         configuration.setLanguageModelPath(getLanguageModelLocation().toString());
         return configuration;
     }
 	
+    public void deleteTemp()//free temp resources
+    {
+    	ModelProviderImpl mp=(ModelProviderImpl) MP;
+    	mp.deactivate(null);
+    }
 }
