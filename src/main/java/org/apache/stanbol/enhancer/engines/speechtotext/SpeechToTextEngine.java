@@ -18,10 +18,7 @@ package org.apache.stanbol.enhancer.engines.speechtotext;
 */
 
 import static org.apache.stanbol.enhancer.servicesapi.helper.EnhancementEngineHelper.randomUUID;
-import static org.apache.stanbol.enhancer.servicesapi.rdf.Properties.DC_TYPE;
 import static org.apache.stanbol.enhancer.servicesapi.rdf.Properties.ENHANCER_SELECTED_TEXT;
-import static org.apache.stanbol.enhancer.servicesapi.rdf.Properties.ENHANCER_START;
-import static org.apache.stanbol.enhancer.servicesapi.rdf.Properties.ENHANCER_END;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -54,7 +51,6 @@ import org.apache.stanbol.enhancer.servicesapi.InvalidContentException;
 import org.apache.stanbol.enhancer.servicesapi.ServiceProperties;
 import org.apache.stanbol.enhancer.servicesapi.helper.EnhancementEngineHelper;
 import org.apache.stanbol.enhancer.servicesapi.impl.AbstractEnhancementEngine;
-import org.apache.stanbol.enhancer.servicesapi.rdf.OntologicalClasses;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
@@ -89,6 +85,13 @@ implements EnhancementEngine, ServiceProperties {
 	
     protected static final Charset UTF8 = Charset.forName("UTF-8");
     public static final String DEFAULT_LANGUAGE = "stanbol.engines.SpeechToText.DEFAULT_LANGUAGE";
+    
+    
+    /**
+     * the Time at which selected text was spoken.
+     */
+    public static final UriRef ENHANCER_TIME_START = new UriRef("http://www.w3.org/TR/prov-o/#startedAtTime");
+    public static final UriRef ENHANCER_TIME_END = new UriRef("http://www.w3.org/TR/prov-o/#endedAtTime");
 
     private SphinxConfig config=new SphinxConfig();
 
@@ -174,8 +177,8 @@ implements EnhancementEngine, ServiceProperties {
             {
                 List<WordResult> wordlist=result.getWords();
                 ArrayList<String>sentencePredicted=new ArrayList<String>();
-                sentencePredicted.add(String.valueOf(wordlist.get(0).getTimeFrame().getStart()));
-                sentencePredicted.add(String.valueOf(wordlist.get(wordlist.size()-2).getTimeFrame().getEnd()));
+                sentencePredicted.add(timeStampCalculator(wordlist.get(0).getTimeFrame().getStart()));
+                sentencePredicted.add(timeStampCalculator(wordlist.get(wordlist.size()-2).getTimeFrame().getEnd()));
                 
                 //sentencePredicted.add(wordlist.get(0).getTimeFrame().getStart());
             	//String timeStamp="["+wordlist.get(0).getTimeFrame().getStart()+ " , "
@@ -219,57 +222,37 @@ implements EnhancementEngine, ServiceProperties {
             UriRef textBlobUri = new UriRef("urn:Sphinx:text:"+random);//create an UriRef for the Blob
             ci.addPart(textBlobUri, plainTextSink.getBlob());
             
-            
             plainTextSink=null;
             ci.getLock().writeLock().lock();
             try
             {
+            	 
                 MGraph metadata = ci.getMetadata();
             	LiteralFactory lf = LiteralFactory.getInstance();
     			UriRef timestampAnnotation = EnhancementEngineHelper.createTextEnhancement(ci, this);
+    			
             	for (ArrayList<String> entry : resultPredicted) {
-        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_START,lf.createTypedLiteral(entry.get(0))));
-        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_END,lf.createTypedLiteral(entry.get(1))));
+        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_TIME_START,lf.createTypedLiteral(entry.get(0))));
+        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_TIME_END,lf.createTypedLiteral(entry.get(1))));
         			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_SELECTED_TEXT,lf.createTypedLiteral(entry.get(2))));
-        			metadata.add(new TripleImpl(timestampAnnotation, DC_TYPE,OntologicalClasses.DBPEDIA_ORGANISATION));
+//        			metadata.add(new TripleImpl(timestampAnnotation, DC_TYPE,OntologicalClasses.DBPEDIA_ORGANISATION));
             		//System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
             	}
             }finally{
                 ci.getLock().writeLock().unlock();
             }
-            //ci.getLock().writeLock().lock();
-            /*
-            try {
-                MGraph graph = ci.getMetadata();
-                System.out.println("--------------------------------------------------"+ci.getMetadata());
-
-                UriRef id = ci.getUri();
-                Set<String> mapped = ontologyMappings.apply(graph, id, metadata);
-                if(includeUnmappedProperties){
-                    Set<String> unmapped = new HashSet<String>(Arrays.asList(metadata.names()));
-                    unmapped.removeAll(mapped);
-                    for(String name : unmapped){
-                        if(name.indexOf(':') >=0 || includeAllUnmappedProperties){ //only mapped
-                            UriRef prop = new UriRef(new StringBuilder(TIKA_URN_PREFIX).append(name).toString());
-                            for(String value : metadata.getValues(name)){
-                                //TODO: without the Property for the name we have no datatype
-                                //      information ... so we add PlainLiterals for now
-                                graph.add(new TripleImpl(id, prop, new PlainLiteralImpl(value)));
-                            }
-                        }
-                    }
-                }
-            }finally{
-                ci.getLock().writeLock().unlock();
-            }
-            */
-        }
-
+            
+    }
+    	
+    String timeStampCalculator(long timeStamp) {
+ 	   	long millis=timeStamp%1000;
+ 	   	long second = (timeStamp / 1000) % 60;
+ 	   	long minute = (timeStamp / (1000 * 60)) % 60;
+ 	   	long hour = (timeStamp / (1000 * 60 * 60)) % 24;
+ 	   	String time = String.format("%02d:%02d:%02d:%d", hour, minute, second, millis);
+    	return time;
+    }
    
-   
-    
-    
-    
     /**
      * ServiceProperties are currently only used for automatic ordering of the 
      * execution of EnhancementEngines (e.g. by the WeightedChain implementation).
