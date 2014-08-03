@@ -72,7 +72,7 @@ public class ClasspathDataFileProvider implements DataFileProvider {
             return null;
         }
         // load default Sphinx models from classpath (embedded in the default data bundle)
-        if(filename.compareTo("en-cmudict.0.6d")==0)
+        if(filename.compareTo("en-cmu.dict")==0||filename.compareTo("en-digits.dict")==0)
         	resourcePath = RESOURCE_BASE_PATH_DICTIONARY + filename;
         else if(filename.compareTo("en-us.lm.dmp")==0)
         	resourcePath = RESOURCE_BASE_PATH_LANGUAGE + filename;

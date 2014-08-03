@@ -26,20 +26,14 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.clerezza.rdf.core.LiteralFactory;
 import org.apache.clerezza.rdf.core.MGraph;
 import org.apache.clerezza.rdf.core.UriRef;
 import org.apache.clerezza.rdf.core.impl.TripleImpl;
 import org.apache.commons.io.IOUtils;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.stanbol.commons.sphinx.impl.ModelProviderImpl;
 import org.apache.stanbol.enhancer.servicesapi.Blob;
 import org.apache.stanbol.enhancer.servicesapi.ContentItem;
@@ -48,11 +42,8 @@ import org.apache.stanbol.enhancer.servicesapi.ContentSink;
 import org.apache.stanbol.enhancer.servicesapi.EngineException;
 import org.apache.stanbol.enhancer.servicesapi.EnhancementEngine;
 import org.apache.stanbol.enhancer.servicesapi.InvalidContentException;
-import org.apache.stanbol.enhancer.servicesapi.ServiceProperties;
 import org.apache.stanbol.enhancer.servicesapi.helper.EnhancementEngineHelper;
 import org.apache.stanbol.enhancer.servicesapi.impl.AbstractEnhancementEngine;
-import org.osgi.service.cm.ConfigurationException;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,23 +59,22 @@ import edu.cmu.sphinx.result.WordResult;
  * @author Suman Saurabh
  *
  */
-@Component(immediate = true, metatype = true, inherit = true)
-@Service
-@Properties(value = {
-    @Property(name = EnhancementEngine.PROPERTY_NAME, value = "SpeechToText"),
-    @Property(name = SpeechToTextEngine.DEFAULT_LANGUAGE, value= "en")
-})
-public class SpeechToTextEngine extends AbstractEnhancementEngine<RuntimeException,RuntimeException> 
-implements EnhancementEngine, ServiceProperties {
 
-    /**
+
+
+
+public class SpeechToTextEngine 
+	extends AbstractEnhancementEngine<IOException,RuntimeException> 
+	implements EnhancementEngine {
+
+	/**
      * Using slf4j for logging
      */
     private static final Logger log = LoggerFactory.getLogger(SpeechToTextEngine.class);
 
 	
     protected static final Charset UTF8 = Charset.forName("UTF-8");
-    public static final String DEFAULT_LANGUAGE = "stanbol.engines.SpeechToText.DEFAULT_LANGUAGE";
+    
     
     
     /**
@@ -93,7 +83,7 @@ implements EnhancementEngine, ServiceProperties {
     public static final UriRef ENHANCER_TIME_START = new UriRef("http://www.w3.org/TR/prov-o/#startedAtTime");
     public static final UriRef ENHANCER_TIME_END = new UriRef("http://www.w3.org/TR/prov-o/#endedAtTime");
 
-    private SphinxConfig config=new SphinxConfig();
+    protected SphinxConfig config;//=new SphinxConfig();
 
     
     
@@ -117,20 +107,6 @@ implements EnhancementEngine, ServiceProperties {
     	config=new SphinxConfig(MP);
 	}
 
-	@Override
-    protected void activate(ComponentContext ctx) throws ConfigurationException {
-		super.activate(ctx);
-    }
-    
-    
-    @Override
-    protected void deactivate(ComponentContext ctx) throws RuntimeException {
-    	config.deleteTemp();
-        this.config = null;
-    	super.deactivate(ctx);
-    	
-    }
-    
     /**
      * @return if and how (asynchronously) we can enhance a ContentItem
      */
@@ -163,9 +139,6 @@ implements EnhancementEngine, ServiceProperties {
         Configuration configuration = config.getConfiguration();
         try {
             in = ci.getStream();
-            //System.out.print(in);
-            
-
             //Extracting Text from Media File parsed
             StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(configuration);
             recognizer.startRecognition(in);
@@ -179,11 +152,6 @@ implements EnhancementEngine, ServiceProperties {
                 ArrayList<String>sentencePredicted=new ArrayList<String>();
                 sentencePredicted.add(timeStampCalculator(wordlist.get(0).getTimeFrame().getStart()));
                 sentencePredicted.add(timeStampCalculator(wordlist.get(wordlist.size()-2).getTimeFrame().getEnd()));
-                
-                //sentencePredicted.add(wordlist.get(0).getTimeFrame().getStart());
-            	//String timeStamp="["+wordlist.get(0).getTimeFrame().getStart()+ " , "
-            		//			+wordlist.get(wordlist.size()-2).getTimeFrame().getEnd()+"]";
-            	//resultPredicted.add(timeStamp+ " "+result.getHypothesis());
                 
                 sentencePredicted.add(result.getHypothesis());
                 resultPredicted.add(sentencePredicted);
@@ -232,11 +200,9 @@ implements EnhancementEngine, ServiceProperties {
     			UriRef timestampAnnotation = EnhancementEngineHelper.createTextEnhancement(ci, this);
     			
             	for (ArrayList<String> entry : resultPredicted) {
-        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_TIME_START,lf.createTypedLiteral(entry.get(0))));
-        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_TIME_END,lf.createTypedLiteral(entry.get(1))));
-        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_SELECTED_TEXT,lf.createTypedLiteral(entry.get(2))));
-//        			metadata.add(new TripleImpl(timestampAnnotation, DC_TYPE,OntologicalClasses.DBPEDIA_ORGANISATION));
-            		//System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_TIME_START,lf.createTypedLiteral(entry.get(0))));//Start time of the spoken text
+        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_TIME_END,lf.createTypedLiteral(entry.get(1))));// End time of the spoken text
+        			metadata.add(new TripleImpl(timestampAnnotation, ENHANCER_SELECTED_TEXT,lf.createTypedLiteral(entry.get(2))));// Spoken text at the particular time frame
             	}
             }finally{
                 ci.getLock().writeLock().unlock();
@@ -253,20 +219,7 @@ implements EnhancementEngine, ServiceProperties {
     	return time;
     }
    
-    /**
-     * ServiceProperties are currently only used for automatic ordering of the 
-     * execution of EnhancementEngines (e.g. by the WeightedChain implementation).
-     * ORDERING_PRE_PROCESSING: All values >= 200 are considered for engines that
-     * do some kind of preprocessing of the content. This includes e.g. the 
-     * conversion of media formats such as extracting the plain text from HTML, 
-     * keyframes from videos, wave form from mp3 ...; extracting metadata directly 
-     * encoded within the parsed content such as ID3 tags from MP3 or RDFa, 
-     * microdata provided by HTML content.
-     * use a value < {@link ServiceProperties#ORDERING_PRE_PROCESSING}
-     * and >= {@link ServiceProperties#ORDERING_PRE_PROCESSING}.
-     */
-    public Map<String, Object> getServiceProperties() {
-        return Collections.unmodifiableMap(Collections.singletonMap(
-                ENHANCEMENT_ENGINE_ORDERING, (Object)ORDERING_PRE_PROCESSING));
-    }
+    
+    
+    
 }

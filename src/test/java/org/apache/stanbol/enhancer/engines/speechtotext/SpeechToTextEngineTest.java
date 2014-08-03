@@ -40,19 +40,18 @@ public class SpeechToTextEngineTest {
     public static void setUpServices() throws IOException {
         context = new MockComponentContext();
         context.properties.put(SpeechToTextEngine.PROPERTY_NAME, "SpeechToText");
-        context.properties.put(SpeechToTextEngine.DEFAULT_LANGUAGE, "en");
     }
 	 
     @Before
     public void bindServices() throws ConfigurationException {
-        if(engine == null){
-            engine = new SpeechToTextEngine(ciFactory, MP);
-	    engine.activate(context);
-        }
+        
     }
     @Test 
-    public void testComputeEnhancements() throws EngineException, IOException, ParseException {
-        log.info(">>> Sphinix Testing WAV  <<<");
+    public void testDefaultEnhancements() throws EngineException, IOException, ParseException {
+    	
+        engine = new SpeechToTextEngine(ciFactory, MP);
+        
+        log.info(">>> Default Model Sphinix Testing WAV  <<<");
         ContentItem ci = createContentItem("10001-90210-01803.wav", "audio/wav");
         assertFalse(engine.canEnhance(ci) == CANNOT_ENHANCE);
         //System.out.println("##################################################"+ci.getMetadata());
@@ -64,7 +63,28 @@ public class SpeechToTextEngineTest {
         Blob plainTextBlob = contentPart.getValue();
         assertNotNull(plainTextBlob);        
     }
-	 
+    @Test 
+    public void testCustomEnhancements() throws EngineException, IOException, ParseException {
+        engine = new SpeechToTextEngine(ciFactory, MP);
+        log.info(">>> Custom Model Sphinix Testing WAV  <<<");
+        ContentItem ci = createContentItem("10001-90210-01803.wav", "audio/wav");
+        assertFalse(engine.canEnhance(ci) == CANNOT_ENHANCE);
+        engine.config.setCustomLangModel("en-us.lm.dmp");
+        engine.config.setCustomDictModel("en-cmu.dict");
+        String acousticResource[]={"feat.params", "mdef", "means", "mixture_weights", "noisedict", "transition_matrices", "variances"};
+		for(String resourceName: acousticResource) {
+			engine.config.setCustomAcousticModel(resourceName);
+		}
+		SphinxConfig.CUSTOM_MODEL_AVAILABLE=true;
+        //System.out.println("##################################################"+ci.getMetadata());
+        engine.computeEnhancements(ci);
+        Entry<UriRef,Blob> contentPart = ContentItemHelper.getBlob(ci, singleton("text/plain"));
+        //	String text = ContentItemHelper.getText(contentPart.getValue());
+        //System.out.println("##################################################"+ci.getMetadata());
+        assertNotNull(contentPart);
+        Blob plainTextBlob = contentPart.getValue();
+        assertNotNull(plainTextBlob);        
+    }
 
     private ContentItem createContentItem(String resourceName, String contentType) throws IOException {
         InputStream in = SpeechToTextEngineTest.class.getClassLoader().getResourceAsStream(resourceName);
@@ -78,7 +98,6 @@ public class SpeechToTextEngineTest {
     @AfterClass
     public static void shutdownServices() {
     	log.info("\n>>Cleaning Temporary Resource<<");
-        engine.deactivate(context);
         engine = null;
     }	    
 }

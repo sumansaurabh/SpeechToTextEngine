@@ -36,6 +36,7 @@ public class MockComponentContext implements ComponentContext {
 
     public void enableComponent(String name) {
     }
+    @SuppressWarnings({ "unchecked", "rawtypes" })
 
     public BundleContext getBundleContext() {
         return new BundleContext() {
@@ -57,14 +58,12 @@ public class MockComponentContext implements ComponentContext {
             public void removeBundleListener(BundleListener listener) {
             }
 
-            @SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
             public ServiceRegistration registerService(String clazz,
                     Object service, Dictionary properties) {
                 return null;
             }
 
-            @SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
             public ServiceRegistration registerService(String[] clazzes,
                     Object service, Dictionary properties) {
@@ -88,11 +87,10 @@ public class MockComponentContext implements ComponentContext {
                 return null;
             }
 
-            @Override
+			@Override
             public ServiceReference getServiceReference(String clazz) {
                 return null;
             }
-
             @Override
             public Object getService(ServiceReference reference) {
                 return null;
@@ -183,7 +181,8 @@ public class MockComponentContext implements ComponentContext {
         return properties;
     }
 
-    public ServiceReference getServiceReference() {
+    @SuppressWarnings("rawtypes")
+	public ServiceReference getServiceReference() {
         return null;
     }
 
@@ -195,7 +194,8 @@ public class MockComponentContext implements ComponentContext {
         return null;
     }
 
-    public Object locateService(String name, ServiceReference reference) {
+    @SuppressWarnings("rawtypes")
+	public Object locateService(String name, ServiceReference reference) {
         return null;
     }
 
