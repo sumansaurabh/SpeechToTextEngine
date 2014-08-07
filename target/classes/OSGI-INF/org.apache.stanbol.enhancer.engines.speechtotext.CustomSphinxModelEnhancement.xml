@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0">
+    <scr:component immediate="true" name="org.apache.stanbol.enhancer.engines.speechtotext.CustomSphinxModelEnhancement" configuration-policy="require" activate="activate" deactivate="deactivate">
+        <implementation class="org.apache.stanbol.enhancer.engines.speechtotext.CustomSphinxModelEnhancement"/>
+        <service servicefactory="false">
+            <provide interface="org.apache.stanbol.enhancer.servicesapi.EnhancementEngine"/>
+            <provide interface="org.apache.stanbol.enhancer.servicesapi.ServiceProperties"/>
+        </service>
+        <property name="stanbol.enhancer.engine.name" value="sphinx-custom"/>
+        <property name="stanbol.engines.speechtotext.dictionary.model">
+            en-cmu.dict
+        </property>
+        <property name="stanbol.engines.speechtotext.language.model">
+            en-us.lm.dmp
+        </property>
+        <property name="stanbol.engines.speechtotext.acoustic.bundlename">
+            org.apache.stanbol.data.sphinx.model.acoustic
+        </property>
+        <property name="service.ranking" type="Integer" value="-100"/>
+        <property name="service.vendor" value="Apache Stanbol"/>
+        <property name="service.pid" value="org.apache.stanbol.enhancer.engines.speechtotext.CustomSphinxModelEnhancement"/>
+        <reference name="ModelProviderImpl" interface="org.apache.stanbol.commons.sphinx.ModelProviderImpl" cardinality="1..1" policy="static" bind="bindModelProviderImpl" unbind="unbindModelProviderImpl"/>
+        <reference name="dataFileTracker" interface="org.apache.stanbol.commons.stanboltools.datafileprovider.DataFileTracker" cardinality="1..1" policy="static" bind="bindDataFileTracker" unbind="unbindDataFileTracker"/>
+        <reference name="ci" interface="org.apache.stanbol.enhancer.servicesapi.ContentItemFactory" cardinality="1..1" policy="static" bind="bindCi" unbind="unbindCi"/>
+    </scr:component>
+</components>

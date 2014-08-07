@@ -1,0 +1,39 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1407421411817
+Build-Jdk: 1.7.0_65
+Built-By: perfectus
+Bundle-Category: Stanbol Enhancement Engines
+Bundle-Description: Enhancement Engine that uses CMU Sphinx to extract t
+ ext from parsed sound file.
+Bundle-DocURL: http://stanbol.apache.org
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: Apache Stanbol Enhancement Engine : Sphinx4
+Bundle-SymbolicName: org.apache.stanbol.enhancer.engines.SpeechToText
+Bundle-Vendor: Apache Stanbol
+Bundle-Version: 1.0.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: org.apache.stanbol.enhancer.engines.speechtotext;uses:="
+ org.apache.stanbol.commons.sphinx,org.apache.stanbol.commons.stanboltoo
+ ls.datafileprovider,org.slf4j,org.osgi.service.cm,org.apache.stanbol.en
+ hancer.servicesapi,org.osgi.service.component,org.apache.stanbol.enhanc
+ er.servicesapi.rdf,edu.cmu.sphinx.result,org.apache.clerezza.rdf.core,o
+ rg.apache.clerezza.rdf.core.impl,org.apache.stanbol.enhancer.servicesap
+ i.helper,edu.cmu.sphinx.api,org.apache.stanbol.enhancer.servicesapi.imp
+ l,org.apache.commons.io,edu.cmu.sphinx.util";version="1.0.0.SNAPSHOT"
+Import-Package: edu.cmu.sphinx.api;version="[1.0.0,2)",edu.cmu.sphinx.re
+ sult;version="[1.0.0,2)",edu.cmu.sphinx.util;version="[1.0.0,2)",org.ap
+ ache.clerezza.rdf.core,org.apache.clerezza.rdf.core.impl,org.apache.com
+ mons.io;version="[1.4.9999,2)",org.apache.stanbol.commons.sphinx;versio
+ n="[1.0.0,2)",org.apache.stanbol.commons.stanboltools.datafileprovider;
+ version="[1.0.0,2)",org.apache.stanbol.enhancer.servicesapi;version="[0
+ .11,1.1)",org.apache.stanbol.enhancer.servicesapi.helper;version="[1.0.
+ 0,2)",org.apache.stanbol.enhancer.servicesapi.impl;version="[0.11,1.1)"
+ ,org.apache.stanbol.enhancer.servicesapi.rdf;version="[1.0.0,2)",org.os
+ gi.service.cm;version="[1.4.0,2)",org.osgi.service.component;version="[
+ 1.2.0,2)",org.slf4j;version="[1.6.1,2)"
+Originally-Created-By: Apache Maven Bundle Plugin
+Service-Component: OSGI-INF/org.apache.stanbol.enhancer.engines.speechto
+ text.SphinxModelEnhancement.xml,OSGI-INF/org.apache.stanbol.enhancer.en
+ gines.speechtotext.CustomSphinxModelEnhancement.xml
+Tool: Bnd-1.50.0

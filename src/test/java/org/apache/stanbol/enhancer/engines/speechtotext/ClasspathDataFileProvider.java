@@ -1,21 +1,18 @@
-package org.apache.stanbol.enhancer.engines.speechtotext;
-
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+/*******************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ ******************************************************************************/
+package org.apache.stanbol.enhancer.engines.speechtotext;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -31,12 +28,13 @@ public class ClasspathDataFileProvider implements DataFileProvider {
     private final Logger log = LoggerFactory.getLogger(getClass());
     /*
      * NOTE: This path needs to be the same as the one used by the
-     *       org.apache.stanbol.data.sphinx.model.wsj bundle to store the 
+     *       org.apache.stanbol.data.sphinx.model.* bundle to store the 
      *       Sphinx models
      */
-    public static final String RESOURCE_BASE_PATH_ACOUSTIC = "acoustic/";
-    public static final String RESOURCE_BASE_PATH_LANGUAGE = "language/";
-    public static final String RESOURCE_BASE_PATH_DICTIONARY = "acoustic/dict/";
+    
+    public static final String RESOURCE_BASE_PATH = "org/apache/stanbol/data/sphinx/";
+    
+    public static final String RESOURCE_BASE_PATH_ACOUSTIC = "org/apache/stanbol/data/sphinx/en-us/";
     
     private String symbolicName;
     
@@ -72,18 +70,15 @@ public class ClasspathDataFileProvider implements DataFileProvider {
             return null;
         }
         // load default Sphinx models from classpath (embedded in the default data bundle)
-        if(filename.compareTo("en-cmu.dict")==0||filename.compareTo("en-digits.dict")==0)
-        	resourcePath = RESOURCE_BASE_PATH_DICTIONARY + filename;
-        else if(filename.compareTo("en-us.lm.dmp")==0)
-        	resourcePath = RESOURCE_BASE_PATH_LANGUAGE + filename;
+        if(filename.compareTo("en-cmu.dict")==0||filename.compareTo("en-us.lm.dmp")==0)
+        	resourcePath = RESOURCE_BASE_PATH+filename;
         else
-        	resourcePath = RESOURCE_BASE_PATH_ACOUSTIC + filename;
+        	resourcePath = RESOURCE_BASE_PATH_ACOUSTIC+filename;
 
 
         URL dataFile = getClass().getClassLoader().getResource(resourcePath);
         if(dataFile==null)
             return null;
-        
         return dataFile;
     }
     @Override

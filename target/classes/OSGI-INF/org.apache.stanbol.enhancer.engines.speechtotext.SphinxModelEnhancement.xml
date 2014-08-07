@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0">
+    <scr:component immediate="true" name="org.apache.stanbol.enhancer.engines.speechtotext.SphinxModelEnhancement" activate="activate" deactivate="deactivate">
+        <implementation class="org.apache.stanbol.enhancer.engines.speechtotext.SphinxModelEnhancement"/>
+        <service servicefactory="false">
+            <provide interface="org.apache.stanbol.enhancer.servicesapi.EnhancementEngine"/>
+            <provide interface="org.apache.stanbol.enhancer.servicesapi.ServiceProperties"/>
+        </service>
+        <property name="stanbol.enhancer.engine.name" value="sphinx"/>
+        <property name="stanbol.NamedEntityExtractionEnhancementEngine.defaultLanguage" value=""/>
+        <property name="service.ranking" type="Integer" value="-100"/>
+        <property name="service.vendor" value="Apache Stanbol"/>
+        <property name="service.pid" value="org.apache.stanbol.enhancer.engines.speechtotext.SphinxModelEnhancement"/>
+        <reference name="ModelProviderImpl" interface="org.apache.stanbol.commons.sphinx.ModelProviderImpl" cardinality="1..1" policy="static" bind="bindModelProviderImpl" unbind="unbindModelProviderImpl"/>
+        <reference name="ci" interface="org.apache.stanbol.enhancer.servicesapi.ContentItemFactory" cardinality="1..1" policy="static" bind="bindCi" unbind="unbindCi"/>
+    </scr:component>
+</components>

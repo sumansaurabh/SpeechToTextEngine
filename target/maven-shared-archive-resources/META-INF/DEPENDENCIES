@@ -1,0 +1,71 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// Apache Maven POM organized by organization.
+//
+// For a list of transitive depencies of this project determined
+// from the Apache Maven POM organized by licenses see the
+// DEPENDENCIES-BY-LICENSE file.
+// ------------------------------------------------------------------
+
+
+From: 'an unknown organization'
+  - Guava: Google Core Libraries for Java (http://code.google.com/p/guava-libraries/guava) com.google.guava:guava:bundle:14.0.1
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - ICU4J (http://icu-project.org/) com.ibm.icu:icu4j:jar:4.8.1.1
+    License: ICU License  (http://source.icu-project.org/repos/icu/icu/trunk/license.html)
+  - Sphinx4 core (http://cmusphinx.sourceforge.net/sphinx4-core) edu.cmu.sphinx:sphinx4-core:jar:1.0-SNAPSHOT
+
+  - JavaBeans Activation Framework (JAF) (http://java.sun.com/products/javabeans/jaf/index.jsp) javax.activation:activation:jar:1.1
+    License: Common Development and Distribution License (CDDL) v1.0  (https://glassfish.dev.java.net/public/CDDLv1.0.html)
+  - servlet-api  javax.servlet:servlet-api:jar:2.5
+
+  - XZ for Java (http://tukaani.org/xz/java.html) org.tukaani:xz:jar:1.5
+    License: Public Domain 
+  - WYMIWYG Commons Core (http://developer.berlios.de/projects/wymiwyg/) org.wymiwyg:wymiwyg-commons-core:bundle:0.7.6
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'OSGi Alliance' (http://www.osgi.org)
+  - osgi.cmpn (http://www.osgi.org) org.osgi:org.osgi.compendium:jar:4.3.1
+    License: Apache License, Version 2.0  (http://opensource.org/licenses/apache2.0.php)
+  - osgi.core (http://www.osgi.org) org.osgi:org.osgi.core:jar:4.3.1
+    License: Apache License, Version 2.0  (http://opensource.org/licenses/apache2.0.php)
+
+From: 'QOS.ch' (http://www.qos.ch)
+  - SLF4J API Module (http://www.slf4j.org) org.slf4j:slf4j-api:jar:1.6.1
+    License: MIT License  (http://www.opensource.org/licenses/mit-license.php)
+
+From: 'The Apache Software Foundation' (http://jakarta.apache.org)
+  - Logging (http://jakarta.apache.org/commons/logging/) commons-logging:commons-logging-api:jar:1.1
+    License: The Apache Software License, Version 2.0  (/LICENSE.txt)
+
+From: 'The Apache Software Foundation' (http://www.apache.org/)
+  - Commons Codec (http://commons.apache.org/proper/commons-codec/) commons-codec:commons-codec:jar:1.8
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Commons IO (http://commons.apache.org/io/) commons-io:commons-io:jar:2.4
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Clerezza - SCB Core (http://clerezza.apache.org/mvn-site/rdf.core/) org.apache.clerezza:rdf.core:bundle:0.14
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Clerezza - SCB Ontologies (http://clerezza.apache.org/mvn-site/rdf.ontologies/) org.apache.clerezza:rdf.ontologies:bundle:0.12
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Clerezza - Utilities Project (http://clerezza.apache.org/mvn-site/utils/) org.apache.clerezza:utils:bundle:0.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Commons Compress (http://commons.apache.org/proper/commons-compress/) org.apache.commons:commons-compress:jar:1.8
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Commons Math (http://commons.apache.org/math/) org.apache.commons:commons-math3:jar:3.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Annotations for SCR (http://felix.apache.org/org.apache.felix.scr.annotations/) org.apache.felix:org.apache.felix.scr.annotations:jar:1.9.8
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Annotations for DS (http://felix.apache.org/org.apache.felix.scr.ds-annotations/) org.apache.felix:org.apache.felix.scr.ds-annotations:jar:1.2.4
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - HttpCore (http://hc.apache.org/httpcomponents-core-ga) org.apache.httpcomponents:httpcore:jar:4.2.4
+    License: Apache License  (LICENSE.txt)
+  - Aache Stanbol Commons Sphinx Models (http://www.apache.org/stanbol-parent/org.apache.stanbol.commons.sphinx/) org.apache.stanbol:org.apache.stanbol.commons.sphinx:bundle:1.0.0-SNAPSHOT
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Stanbol Commons Data File Provider (http://www.apache.org/stanbol-parent/org.apache.stanbol.commons.stanboltools.datafileprovider/) org.apache.stanbol:org.apache.stanbol.commons.stanboltools.datafileprovider:bundle:1.0.0-SNAPSHOT
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - OSGI Bundle for CMU-Sphinx (http://www.apache.org/stanbol-parent/stanbol-ext-parent/sphinx4-bundle/) org.apache.stanbol:sphinx4-bundle:bundle:1.0-SNAPSHOT
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0" localization="OSGI-INF/metatype/metatype">
+    <OCD id="org.apache.stanbol.enhancer.engines.speechtotext.CustomSphinxModelEnhancement" name="%stanbol.CustomSphinxModelEnhancement.name" description="%stanbol.CustomSphinxModelEnhancement.description">
+        <AD id="stanbol.enhancer.engine.name" type="String" default="sphinx-custom" name="Property stanbol.enhancer.engine.name" description="Description for stanbol.enhancer.engine.name"/>
+        <AD id="stanbol.engines.speechtotext.dictionary.model" type="String" default="en-cmu.dict" name="Property stanbol.engines.speechtotext.dictionary.model" description="Description for stanbol.engines.speechtotext.dictionary.model" cardinality="2147483647"/>
+        <AD id="stanbol.engines.speechtotext.language.model" type="String" default="en-us.lm.dmp" name="Property stanbol.engines.speechtotext.language.model" description="Description for stanbol.engines.speechtotext.language.model" cardinality="2147483647"/>
+        <AD id="stanbol.engines.speechtotext.acoustic.bundlename" type="String" default="org.apache.stanbol.data.sphinx.model.acoustic" name="Property stanbol.engines.speechtotext.acoustic.bundlename" description="Description for stanbol.engines.speechtotext.acoustic.bundlename" cardinality="2147483647"/>
+    </OCD>
+    <Designate pid="org.apache.stanbol.enhancer.engines.speechtotext.CustomSphinxModelEnhancement" factoryPid="org.apache.stanbol.enhancer.engines.speechtotext.CustomSphinxModelEnhancement">
+        <Object ocdref="org.apache.stanbol.enhancer.engines.speechtotext.CustomSphinxModelEnhancement"/>
+    </Designate>
+</metatype:MetaData>
