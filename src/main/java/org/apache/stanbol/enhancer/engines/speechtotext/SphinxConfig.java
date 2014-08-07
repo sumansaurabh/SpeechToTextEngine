@@ -152,11 +152,11 @@ public class SphinxConfig {
     protected Configuration getConfiguration() {
 	Configuration configuration = new Configuration();
     	configuration.setAcousticModelPath(getAcousticModelLocation().toString());
-        //configuration.setAcousticModelPath("/tmp/acoustic");
+        //configuration.setAcousticModelPath("/tmp/model/acoustic");
         configuration.setDictionaryPath(getDictionaryModelLocation().toString());
-        //configuration.setDictionaryPath("/tmp/en-cmu.dict");
+        //configuration.setDictionaryPath("/tmp/model/en-cmu.dict");
         configuration.setLanguageModelPath(getLanguageModelLocation().toString());
-        //configuration.setLanguageModelPath("/tmp/en-us.lm.dmp");
+        // configuration.setLanguageModelPath("/tmp/model/en-us.lm.dmp");
         return configuration;
     }
 	
