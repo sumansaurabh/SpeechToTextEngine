@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0" localization="OSGI-INF/metatype/metatype">
-    <OCD id="org.apache.stanbol.enhancer.engines.speechtotext.SphinxModelEnhancement" name="%stanbol.SphinxModelEnhancement.name" description="%stanbol.SphinxModelEnhancement.description">
-        <AD id="stanbol.enhancer.engine.name" type="String" default="sphinx" name="Property stanbol.enhancer.engine.name" description="Description for stanbol.enhancer.engine.name"/>
-        <AD id="stanbol.NamedEntityExtractionEnhancementEngine.defaultLanguage" type="String" default="" name="Property stanbol.NamedEntityExtractionEnhancementEngine.defaultLanguage" description="Description for stanbol.NamedEntityExtractionEnhancementEngine.defaultLanguage"/>
-    </OCD>
-    <Designate pid="org.apache.stanbol.enhancer.engines.speechtotext.SphinxModelEnhancement" factoryPid="org.apache.stanbol.enhancer.engines.speechtotext.SphinxModelEnhancement">
-        <Object ocdref="org.apache.stanbol.enhancer.engines.speechtotext.SphinxModelEnhancement"/>
-    </Designate>
-</metatype:MetaData>
