@@ -34,7 +34,7 @@ import org.apache.clerezza.rdf.core.MGraph;
 import org.apache.clerezza.rdf.core.UriRef;
 import org.apache.clerezza.rdf.core.impl.TripleImpl;
 import org.apache.commons.io.IOUtils;
-import org.apache.stanbol.commons.sphinx.ModelProviderImpl;
+import org.apache.stanbol.commons.sphinx.ModelProvider;
 import org.apache.stanbol.commons.stanboltools.datafileprovider.DataFileProvider;
 import org.apache.stanbol.enhancer.servicesapi.Blob;
 import org.apache.stanbol.enhancer.servicesapi.ContentItem;
@@ -80,7 +80,7 @@ public abstract class SpeechToTextEngine
     public static final UriRef ENHANCER_TIME_END = new UriRef("http://www.w3.org/TR/prov-o/#endedAtTime");
 
     protected SphinxConfig config;
-    protected ModelProviderImpl MPi;
+    protected ModelProvider MPi;
 
     
     
@@ -98,7 +98,7 @@ public abstract class SpeechToTextEngine
     
     protected SpeechToTextEngine() {}
     
-    public SpeechToTextEngine(ModelProviderImpl MPi, SphinxConfig config) {
+    public SpeechToTextEngine(ModelProvider MPi, SphinxConfig config) {
     	if(MPi == null){
             throw new IllegalArgumentException("The parsed ModelProvider instance MUST NOT be NULL!");
         }
@@ -110,7 +110,7 @@ public abstract class SpeechToTextEngine
     }
     
     SpeechToTextEngine(DataFileProvider dfp,SphinxConfig config) throws IOException {
-        this(new ModelProviderImpl(dfp),config);
+        //this(new ModelProviderImpl(dfp),config);
     }
    
    
@@ -126,7 +126,8 @@ public abstract class SpeechToTextEngine
             if ((ci.getBlob() == null)|| 
                     (ci.getBlob().getStream().read() == -1)||
                     (ci.getMimeType().compareToIgnoreCase("audio/wav"))!=0){
-                return CANNOT_ENHANCE;
+                    //if(!config.initConfig(MPi))
+                        return CANNOT_ENHANCE;
             }
         } catch (IOException e) {
             log.error("Failed to get the text for "
@@ -141,6 +142,7 @@ public abstract class SpeechToTextEngine
     @SuppressWarnings("deprecation")
     @Override
     public void computeEnhancements(ContentItem ci) throws EngineException {
+        log.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         List<ArrayList<String>> resultPredicted=new ArrayList<ArrayList<String>>();
         StringBuilder recogString=new StringBuilder();
         /*
@@ -160,8 +162,10 @@ public abstract class SpeechToTextEngine
         String lang=extractLanguage(ci);
         if(lang!=null) {
             config.setDefaultLanguage(lang);
+            //config.initConfig(MPi);
         }
         config.initConfig(MPi);
+
 
         
         

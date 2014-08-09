@@ -29,7 +29,9 @@ import org.apache.felix.scr.annotations.Service;
 import org.apache.stanbol.commons.sphinx.AcousticModel;
 import org.apache.stanbol.commons.sphinx.DictionaryModel;
 import org.apache.stanbol.commons.sphinx.LanguageModel;
-import org.apache.stanbol.commons.sphinx.ModelProviderImpl;
+import org.apache.stanbol.commons.sphinx.ModelProvider;
+
+
 import org.apache.stanbol.commons.stanboltools.datafileprovider.DataFileListener;
 import org.apache.stanbol.commons.stanboltools.datafileprovider.DataFileTracker;
 import org.apache.stanbol.enhancer.servicesapi.ContentItemFactory;
@@ -67,7 +69,7 @@ import org.slf4j.LoggerFactory;
                                                                 //inorder to distinguish between them bundle name should be made available
     @Property(name=Constants.SERVICE_RANKING,intValue=-100)
 })
-@Reference(name="ModelProviderImpl",referenceInterface=ModelProviderImpl.class, 
+@Reference(name="ModelProvider",referenceInterface=ModelProvider.class, 
     cardinality=ReferenceCardinality.MANDATORY_UNARY,
     policy=ReferencePolicy.STATIC)
 
@@ -109,14 +111,14 @@ public class CustomSphinxModelEnhancement
      * Bind method of {@link SpeechToTextEngine#ModelProviderImpl}
      * @param MPi
      */
-    protected void bindModelProviderImpl(ModelProviderImpl MPi){
+    protected void bindModelProvider(ModelProvider MPi){
         this.MPi = MPi;
     }
     /**
      * Unbind method of {@link SpeechToTextEngine#ModelProviderImpl}
      * @param MPi
      */
-    protected void unbindModelProviderImpl(ModelProviderImpl MPi){
+    protected void unbindModelProvider(ModelProvider MPi){
         this.MPi = null;
     }
     

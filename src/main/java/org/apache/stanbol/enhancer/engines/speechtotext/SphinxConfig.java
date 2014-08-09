@@ -16,8 +16,6 @@ package org.apache.stanbol.enhancer.engines.speechtotext;
 import java.util.HashSet;
 
 
-import org.apache.stanbol.enhancer.servicesapi.ContentItem;
-import org.apache.stanbol.enhancer.servicesapi.helper.EnhancementEngineHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +24,7 @@ import org.apache.stanbol.commons.sphinx.AcousticModel;
 import org.apache.stanbol.commons.sphinx.BaseModel;
 import org.apache.stanbol.commons.sphinx.DictionaryModel;
 import org.apache.stanbol.commons.sphinx.LanguageModel;
-import org.apache.stanbol.commons.sphinx.ModelProviderImpl;
+import org.apache.stanbol.commons.sphinx.ModelProvider;
 
 /**
  * Configures parsed Model files and makes it available to {@link SpeechToTextEngine} 
@@ -39,9 +37,9 @@ import org.apache.stanbol.commons.sphinx.ModelProviderImpl;
 public class SphinxConfig {
 	
 	
-    private static final Logger log = LoggerFactory.getLogger(SpeechToTextEngine.class);
+    private static final Logger log = LoggerFactory.getLogger(SphinxConfig.class);
     
-    private ModelProviderImpl MPi;
+    private ModelProvider MPi;
     
     private BaseModel lmodel, amodel, dmodel;// Getter for Model files wrapper returned by {@link ModelProviderImpl}
     
@@ -61,24 +59,36 @@ public class SphinxConfig {
     public SphinxConfig() {}
     
    	
-    protected void initConfig(ModelProviderImpl MPi) {
+    protected boolean initConfig(ModelProvider MPi) {
+        System.out.println("Getting to MPi");
         this.MPi=MPi;
     	lmodel=new LanguageModel();
         amodel=new AcousticModel();
         dmodel=new DictionaryModel();
         
         if(!CUSTOM_MODEL_AVAILABLE) {
-            log.info("\n################loading  model {} via the DataFileProvider",lmodel);
+            System.out.println("Getting to acosutic");
 
-            lmodel = this.MPi.getDefaultModel(getDefaultLanguage(),lmodel);
-            amodel = this.MPi.getDefaultModel(getDefaultLanguage(),amodel);
-            dmodel = this.MPi.getDefaultModel(getDefaultLanguage(),dmodel);
+            amodel = MPi.getDefaultModel(getDefaultLanguage(),amodel);
+            //amodel = MPi.getDefaultModel(getDefaultLanguage(),amodel);
+
+            System.out.println("Getting to dictionary");
+            dmodel = MPi.getDefaultModel(getDefaultLanguage(),dmodel);                        
+            System.out.println("Getting to language");
+            lmodel = MPi.getDefaultModel(getDefaultLanguage(),lmodel);
+            
+            
+           
         }
         else {
             lmodel = this.MPi.getModel(languageModelFile, lmodel,null);
             amodel = this.MPi.getModel(acousticModelFile, amodel,bundleSymbolicName);
             dmodel = this.MPi.getModel(dictionaryModelFile, dmodel,null);
         }
+        
+        if(amodel==null||dmodel==null||lmodel==null)
+            return false;
+        return true;
     }
 	
 	
@@ -138,10 +148,8 @@ public class SphinxConfig {
      * 
      * @param modelType {@link LanguageModel}, {@link DictionaryModel}, {@link AcousticModel}
      */
-    public void deleteUnavailableResource(BaseModel modelType)//free temp resources
-    {
-    	ModelProviderImpl mp=(ModelProviderImpl) MPi;
-    	mp.removeUnavailableResource(modelType);
+    public void deleteUnavailableResource(BaseModel modelType) {//free temp resources
+    	MPi.removeUnavailableResource(modelType);
     }
 
     /**
@@ -151,7 +159,8 @@ public class SphinxConfig {
 	
     protected Configuration getConfiguration() {
 	Configuration configuration = new Configuration();
-    	configuration.setAcousticModelPath(getAcousticModelLocation().toString());
+        
+    	configuration.setAcousticModelPath(getAcousticModelLocation().toString());           
         //configuration.setAcousticModelPath("/tmp/model/acoustic");
         configuration.setDictionaryPath(getDictionaryModelLocation().toString());
         //configuration.setDictionaryPath("/tmp/model/en-cmu.dict");

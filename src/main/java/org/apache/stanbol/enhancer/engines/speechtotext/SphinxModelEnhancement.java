@@ -24,7 +24,7 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
-import org.apache.stanbol.commons.sphinx.ModelProviderImpl;
+import org.apache.stanbol.commons.sphinx.ModelProvider;
 import org.apache.stanbol.enhancer.servicesapi.ContentItemFactory;
 import org.apache.stanbol.enhancer.servicesapi.EnhancementEngine;
 import org.apache.stanbol.enhancer.servicesapi.ServiceProperties;
@@ -54,7 +54,7 @@ import org.osgi.service.component.ComponentContext;
 	    //set the ranking of the default config to a negative value (ConfigurationPolicy.OPTIONAL) 
 	    @Property(name=Constants.SERVICE_RANKING,intValue=-100) 
 	})
-@Reference(name="ModelProviderImpl",referenceInterface=ModelProviderImpl.class, 
+@Reference(name="ModelProvider",referenceInterface=ModelProvider.class, 
     cardinality=ReferenceCardinality.MANDATORY_UNARY,
     policy=ReferencePolicy.STATIC)
 public class SphinxModelEnhancement 
@@ -75,14 +75,14 @@ public class SphinxModelEnhancement
      * Bind method of {@link SpeechToTextEngine#ModelProviderImpl}
      * @param MPi
      */
-    protected void bindModelProviderImpl(ModelProviderImpl MPi){
+    protected void bindModelProvider(ModelProvider MPi){
         this.MPi = MPi;
     }
     /**
      * Unbind method of {@link SpeechToTextEngine#ModelProviderImpl}
      * @param MPi
      */
-    protected void unbindModelProviderImpl(ModelProviderImpl MPi){
+    protected void unbindModelProvider(ModelProvider MPi){
         this.MPi = null;
     }
     
