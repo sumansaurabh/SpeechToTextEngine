@@ -64,8 +64,8 @@ import org.slf4j.LoggerFactory;
         value={"en-cmu.dict"}),//Same as default language model used in this engine
     @Property(name=CustomSphinxModelEnhancement.LANGUAGE_MODEL, cardinality=Integer.MAX_VALUE,
         value={"en-us.lm.dmp"}),// Same as default language model used in this engine
-    @Property(name=CustomSphinxModelEnhancement.ACOUSTIC_MODEL_PROVIDER_BUNDLE_NAME, cardinality=Integer.MAX_VALUE,
-        value={"org.apache.stanbol.data.sphinx.model.acoustic"}),//since all model types of acoustic model configuration files have same name
+    @Property(name=CustomSphinxModelEnhancement.BUNDLE_SYMBOLIC_NAME, cardinality=Integer.MAX_VALUE,
+        value={"org.apache.stanbol.data.sphinx.model"}),//since all model types of acoustic model configuration files have same name
                                                                 //inorder to distinguish between them bundle name should be made available
     @Property(name=Constants.SERVICE_RANKING,intValue=-100)
 })
@@ -97,7 +97,7 @@ public class CustomSphinxModelEnhancement
      * Allows to define the bundle name of the model provider used as acoustic model file names
      * for all bundles are same.
      */
-    public static final String ACOUSTIC_MODEL_PROVIDER_BUNDLE_NAME = "stanbol.engines.speechtotext.acoustic.bundlename";
+    public static final String BUNDLE_SYMBOLIC_NAME = "stanbol.engines.speechtotext.bundlename";
 
     
     @Reference
@@ -130,17 +130,19 @@ public class CustomSphinxModelEnhancement
     }
     /**
      * Activates 
+     * @throws java.io.IOException
+     * @throws org.osgi.service.cm.ConfigurationException
      */
 	@Override
     protected void activate(ComponentContext ctx) throws IOException, ConfigurationException{
 	super.activate(ctx);
         config = new SphinxConfig();
         ciFactory=ci;
-        String acoustic_bundleSymbolicName=null;//Getter for acoustic bundle name
+        String bundleSymbolicName=null;//Getter for acoustic bundle name
         config.CUSTOM_MODEL_AVAILABLE=true;
-        Object value = ctx.getProperties().get(ACOUSTIC_MODEL_PROVIDER_BUNDLE_NAME);
+        Object value = ctx.getProperties().get(BUNDLE_SYMBOLIC_NAME);
         if(value != null && !value.toString().isEmpty()){
-            acoustic_bundleSymbolicName=value.toString();
+            bundleSymbolicName=value.toString();
             config.setBundleSymbolicName(value.toString());
 	}
         
@@ -181,9 +183,10 @@ public class CustomSphinxModelEnhancement
 	//Locating the Acoustic Model files in the parsed @bundleSymbolicName
 	String acousticResource[]={"feat.params", "mdef", "means", "mixture_weights", "noisedict", "transition_matrices", "variances","feature_transform"};
 	for(String resourceName: acousticResource) {
-	    dataFileTracker.add(modelFileListener,acoustic_bundleSymbolicName,resourceName, null);
+	    dataFileTracker.add(modelFileListener,bundleSymbolicName,resourceName, null);
 	}
     }
+    @Override
     protected void deactivate(ComponentContext ctx) {
         dataFileTracker.removeAll(modelFileListener); //remove all tracked files
         config = null;
@@ -203,6 +206,7 @@ public class CustomSphinxModelEnhancement
      * use a value < {@link ServiceProperties#ORDERING_PRE_PROCESSING}
      * and >= {@link ServiceProperties#ORDERING_PRE_PROCESSING}.
      */
+    @Override
     public Map<String, Object> getServiceProperties() {
         return Collections.unmodifiableMap(Collections.singletonMap(
                 ENHANCEMENT_ENGINE_ORDERING, (Object)ORDERING_PRE_PROCESSING));

@@ -142,7 +142,7 @@ public abstract class SpeechToTextEngine
     @SuppressWarnings("deprecation")
     @Override
     public void computeEnhancements(ContentItem ci) throws EngineException {
-        log.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        log.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");//Helps in debugging
         List<ArrayList<String>> resultPredicted=new ArrayList<ArrayList<String>>();
         StringBuilder recogString=new StringBuilder();
         /*

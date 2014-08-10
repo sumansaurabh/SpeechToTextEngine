@@ -48,15 +48,19 @@ public class SphinxConfig {
     private String bundleSymbolicName=null;//Getter for parsed symbolic name of bundle
     
     
-    private HashSet<String> acousticModelFile=new HashSet<String>(); //Getter for acoustic Model Set
-    private HashSet<String> languageModelFile=new HashSet<String>();//Getter for Language Model Set,
+    private HashSet<String> acousticModelFile; //Getter for acoustic Model Set
+    private HashSet<String> languageModelFile;//Getter for Language Model Set,
     																//currently one model file is made available
-    private HashSet<String> dictionaryModelFile=new HashSet<String>();//Getter for Dictionary Model
+    private HashSet<String> dictionaryModelFile;//Getter for Dictionary Model
     																//currently one model file is made available
     
     protected boolean CUSTOM_MODEL_AVAILABLE=false;// True when Custom Model files are used
     
-    public SphinxConfig() {}
+    public SphinxConfig() {
+        this.dictionaryModelFile = new HashSet<String>();
+        this.languageModelFile = new HashSet<String>();
+        this.acousticModelFile = new HashSet<String>();
+}
     
    	
     protected boolean initConfig(ModelProvider MPi) {
@@ -81,14 +85,12 @@ public class SphinxConfig {
            
         }
         else {
-            lmodel = this.MPi.getModel(languageModelFile, lmodel,null);
+            lmodel = this.MPi.getModel(languageModelFile, lmodel,bundleSymbolicName);
             amodel = this.MPi.getModel(acousticModelFile, amodel,bundleSymbolicName);
-            dmodel = this.MPi.getModel(dictionaryModelFile, dmodel,null);
+            dmodel = this.MPi.getModel(dictionaryModelFile, dmodel,bundleSymbolicName);
         }
         
-        if(amodel==null||dmodel==null||lmodel==null)
-            return false;
-        return true;
+        return amodel != null && dmodel != null && lmodel != null;
     }
 	
 	
