@@ -71,6 +71,27 @@ Default enhancer uses the above model to extract text from parsed sound file
 2.  Spoken Text: 1001-90210-01803
 3.  Predicted Text: one zero zero zero one, nine oh two one oh, cyril one eight zero three
 
+    <rdf:RDF
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:j.0="http://www.w3.org/TR/prov-o/#"
+      xmlns:j.1="http://fise.iks-project.eu/ontology/" > 
+      <rdf:Description rdf:about="urn:Sphinx:text:e0a5257b-e94d-77de-f4ee-2194c447bbfc">
+        <j.1:selected-text rdf:datatype="http://www.w3.org/2001/XMLSchema#string">nine oh two one oh</j.1:selected-text>
+        <j.0:endedAtTime rdf:datatype="http://www.w3.org/2001/XMLSchema#string">00:00:04:640</j.0:endedAtTime>
+        <j.0:startedAtTime rdf:datatype="http://www.w3.org/2001/XMLSchema#string">00:00:02:650</j.0:startedAtTime>
+      </rdf:Description>
+      <rdf:Description rdf:about="urn:Sphinx:text:b5f36d1d-ad8c-259d-58e3-42ca60c54830">
+        <j.1:selected-text rdf:datatype="http://www.w3.org/2001/XMLSchema#string">one zero zero zero one</j.1:selected-text>
+        <j.0:endedAtTime rdf:datatype="http://www.w3.org/2001/XMLSchema#string">00:00:02:540</j.0:endedAtTime>
+        <j.0:startedAtTime rdf:datatype="http://www.w3.org/2001/XMLSchema#string">00:00:00:820</j.0:startedAtTime>
+      </rdf:Description>
+      <rdf:Description rdf:about="urn:Sphinx:text:7a633f5c-62ea-e604-59ba-53ef851677d1">
+        <j.1:selected-text rdf:datatype="http://www.w3.org/2001/XMLSchema#string">cyril one eight zero three</j.1:selected-text>
+        <j.0:endedAtTime rdf:datatype="http://www.w3.org/2001/XMLSchema#string">00:00:07:910</j.0:endedAtTime>
+        <j.0:startedAtTime rdf:datatype="http://www.w3.org/2001/XMLSchema#string">00:00:04:910</j.0:startedAtTime>
+      </rdf:Description>
+    </rdf:RDF>
+
 
 
 
