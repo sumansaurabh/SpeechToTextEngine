@@ -65,13 +65,12 @@ Default enhancer uses the above model to extract text from parsed sound file
 
     curl -v -X POST -H "Accept: application/rdf+xml" -H "Content-type: audio/wav" -T temp.wav "http://localhost:8090/enhancer/engine/sphinx"
     
-###### Test Cases Result
+##### Test Cases Result
 
-Sound file: temp.wav
+Sound file: temp.wav 
 Spoken Text: 1001-90210-01803
-Predicted Text: one zero zero zero one
-                nine oh two one oh
-                cyril one eight zero three
+Predicted Text: one zero zero zero one, nine oh two one oh, cyril one eight zero three
+
 
 
 
