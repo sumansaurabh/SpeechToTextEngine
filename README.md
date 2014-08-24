@@ -67,9 +67,12 @@ Default enhancer uses the above model to extract text from parsed sound file
     
 ##### Test Cases Result
 
-1.  Sound file: temp.wav 
+1.  Sound file: temp.wav in 'test/resources'
 2.  Spoken Text: 1001-90210-01803
 3.  Predicted Text: one zero zero zero one, nine oh two one oh, cyril one eight zero three
+
+###### Note:
+Test Cases are deactivated for the engine, as Sphinx4 uses lot of memory to predict results. This might hamper installation of Stanbol bundle.
 
 
 
