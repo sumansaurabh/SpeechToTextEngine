@@ -64,7 +64,6 @@ public class SphinxConfig {
     
    	
     protected boolean initConfig(ModelProvider MPi) {
-        System.out.println("Getting to MPi");
         this.MPi=MPi;
     	lmodel=new LanguageModel();
         amodel=new AcousticModel();
