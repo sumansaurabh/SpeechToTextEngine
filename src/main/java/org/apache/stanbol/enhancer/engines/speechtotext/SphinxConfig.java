@@ -63,6 +63,20 @@ public class SphinxConfig {
 }
     
    	
+    /**
+     * Initializes the configuration by setting the language model, acoustic model, and dictionary model.
+     *
+     * @param MPi the ModelProvider used to retrieve the models
+     * @return true if the models are successfully initialized, false otherwise
+     * @throws NullPointerException if MPi is null
+     * @throws ModelNotFoundException if the default models are not found
+     *
+     * Example usage:
+     * <pre>{@code
+     * ModelProvider modelProvider = new ModelProvider();
+     * boolean isInitialized = initConfig(modelProvider);
+     * }</pre>
+     */
     protected boolean initConfig(ModelProvider MPi) {
         this.MPi=MPi;
     	lmodel=new LanguageModel();
