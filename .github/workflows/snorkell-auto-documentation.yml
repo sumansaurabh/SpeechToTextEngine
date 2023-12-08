@@ -10,22 +10,10 @@ on:
 jobs:
   Documentation:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Extract branch name
-        shell: bash
-        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
-      - name: Run Script
-        shell: bash
-        run: |
-          ESCAPED_COMMIT_MSG=$(printf '%s\n' "${{ github.event.head_commit.message }}" | jq -R -s -c .)
-          echo "Escaped commit-msg: $ESCAPED_COMMIT_MSG"
-          echo "Commit Message: ${{ github.event.head_commit.message }}"
-          echo "PR Title: ${{ env.PR_TITLE }}"
-          echo "Repository: ${{ github.repository }}"
-          echo "Branch Name: ${{ env.BRANCH_NAME}}"
-          echo "Commit SHA: ${{ github.sha}}"
-          
-          curl --max-time 600 -X POST -H 'api-key: ${{ secrets.SNORKELL_API_KEY }}' -H 'Content-Type: application/json' \
-          -d '{"installation_id": "${{ secrets.SNORKELL_CLIENT_ID }}", "full_repo_name": "${{ github.repository }}", "base_branch": "${{ env.BRANCH_NAME }}", "commit_sha": "${{ github.sha }}", "commit_message": '"$ESCAPED_COMMIT_MSG"'}' \
-          https://production-gateway.snorkell.ai/api/app/github/generate/documentation || echo "Curl failed with exit code: $?"
+    - name: Snorkell DocGen Client
+      uses: SingularityX-ai/snorkell-documentation-client@v1.0.0
+      with:
+        client_id: ${{ secrets.SNORKELL_CLIENT_ID }}
+        api_key: ${{ secrets.SNORKELL_API_KEY }}
+        branch_name: "master"
